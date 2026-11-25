@@ -1,0 +1,74 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: Customer dimension without direct identifiers
+    columns:
+      - name: customer_id
+        data_tests:
+          - unique
+          - not_null
+  - name: dim_accounts
+    description: Account dimension
+    columns:
+      - name: account_id
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+  - name: dim_date
+    description: One row per calendar day
+    columns:
+      - name: date_day
+        data_tests:
+          - unique
+          - not_null
+  - name: fct_transactions
+    description: Transaction fact table
+    columns:
+      - name: transaction_id
+        data_tests:
+          - unique
+          - not_null
+      - name: account_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_accounts')
+                field: account_id
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: transaction_date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_day
+      - name: signed_amount
+        data_tests:
+          - not_null
+  - name: mart_daily_channel_summary
+    description: Daily totals by channel
+    columns:
+      - name: transaction_date
+        data_tests:
+          - not_null
+      - name: channel
+        data_tests:
+          - not_null
+      - name: transaction_count
+        data_tests:
+          - not_null

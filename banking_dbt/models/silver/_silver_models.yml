@@ -1,0 +1,75 @@
+version: 2
+
+models:
+  - name: silver_customers
+    description: Typed and standardised customers
+    columns:
+      - name: customer_id
+        data_tests:
+          - unique
+          - not_null
+  - name: silver_accounts
+    description: Typed accounts linked to customers
+    columns:
+      - name: account_id
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('silver_customers')
+                field: customer_id
+  - name: silver_transactions
+    description: One row per transaction, with data quality flags
+    columns:
+      - name: transaction_id
+        data_tests:
+          - unique
+          - not_null
+      - name: account_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('silver_accounts')
+                field: account_id
+      - name: transaction_ts
+        data_tests:
+          - not_null
+      - name: amount
+        data_tests:
+          - not_null
+      - name: direction
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['debit', 'credit']
+      - name: currency
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['GBP']
+      - name: channel
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['card', 'online', 'mobile', 'branch', 'atm', 'unknown']
+  - name: silver_control_totals
+    description: Expected daily counts and amounts from the source
+    columns:
+      - name: transaction_date
+        data_tests:
+          - unique
+          - not_null
+      - name: expected_row_count
+        data_tests:
+          - not_null
+      - name: expected_total_amount
+        data_tests:
+          - not_null

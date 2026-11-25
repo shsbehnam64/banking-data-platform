@@ -16,9 +16,14 @@ clean-targets:
 vars:
   # Folder with the source CSV files, relative to this dbt project
   raw_path: "../data/raw"
+  # A transaction loaded more than this many hours after it happened is "late"
+  late_arrival_hours: 24
 
 models:
   banking_dbt:
     bronze:
       +materialized: table
       +schema: bronze
+    silver:
+      +materialized: table
+      +schema: silver

@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Synthetic CSV files produced by scripts/generate_data.py
+    config:
+      meta:
+        external_location: >
+          read_csv('{{ var("raw_path", "../data/raw") }}/{name}.csv',
+          header = true, all_varchar = true, filename = true)
+    tables:
+      - name: customers
+      - name: accounts
+      - name: transactions
+      - name: control_totals

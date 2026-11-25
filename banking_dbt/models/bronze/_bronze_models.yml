@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: bronze_customers
+    description: Raw customers, unchanged apart from lineage columns
+    columns:
+      - name: customer_id
+        data_tests:
+          - not_null
+      - name: _source_file
+        data_tests:
+          - not_null
+  - name: bronze_accounts
+    description: Raw accounts, unchanged apart from lineage columns
+    columns:
+      - name: account_id
+        data_tests:
+          - not_null
+      - name: customer_id
+        data_tests:
+          - not_null
+      - name: _source_file
+        data_tests:
+          - not_null
+  - name: bronze_transactions
+    description: Raw transactions, unchanged apart from lineage columns
+    columns:
+      - name: transaction_id
+        data_tests:
+          - not_null
+      - name: account_id
+        data_tests:
+          - not_null
+      - name: amount
+        data_tests:
+          - not_null
+      - name: loaded_at
+        data_tests:
+          - not_null
+      - name: _source_file
+        data_tests:
+          - not_null
+  - name: bronze_control_totals
+    description: Raw control totals, unchanged apart from lineage columns
+    columns:
+      - name: transaction_date
+        data_tests:
+          - not_null
+      - name: row_count
+        data_tests:
+          - not_null
+      - name: total_amount
+        data_tests:
+          - not_null
+      - name: _source_file
+        data_tests:
+          - not_null
